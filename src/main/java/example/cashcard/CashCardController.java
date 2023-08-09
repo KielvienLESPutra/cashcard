@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.service.annotation.DeleteExchange;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -49,10 +51,10 @@ public class CashCardController {
 //		} else {
 //			return ResponseEntity.notFound().build();
 //		}
-		
+
 //		CashCard cashCard = cashCardRepository.findByIdAndOwner(requestedId, principal.getName());
 		CashCard cashCard = findCashCard(requestedId, principal);
-		
+
 		if (cashCard != null) {
 			return ResponseEntity.ok(cashCard);
 		} else {
@@ -99,5 +101,21 @@ public class CashCardController {
 
 		return ResponseEntity.ok(page.getContent());
 
+	}
+
+	@DeleteMapping("/{id}")
+	private ResponseEntity<Void> deleteCashCard(@PathVariable Long id, Principal principal) {
+//		if(!cashCardRepository.existsByIdAndOwner(id, principal.getName())) {
+//			return ResponseEntity.notFound().build();
+//		}
+//		cashCardRepository.deleteById(id);
+//		return ResponseEntity.noContent().build();
+		
+		if(cashCardRepository.existsByIdAndOwner(id, principal.getName())) {
+			cashCardRepository.deleteById(id);
+			return ResponseEntity.noContent().build();
+		}
+		
+		return ResponseEntity.notFound().build();
 	}
 }
